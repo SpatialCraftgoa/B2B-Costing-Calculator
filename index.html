@@ -3,53 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pricing Calculator for B2B partners</title>
+    <title>Pricing Calculator for B2B Partners</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         label, input, button { display: block; margin: 10px 0; }
+        #result { margin-top: 20px; }
     </style>
 </head>
 <body>
-    <h1>Pricing Calculator for B2B partners</h1>
-    <form method="post" action="#">
+    <h1>Pricing Calculator for B2B Partners</h1>
+    <form>
         <label for="number">Enter the area in square meters:</label>
         <input type="number" id="number" name="number" step="0.01" required>
         <button type="submit">Submit</button>
-        <button type="reset" onclick="clearResult()">Reset</button>
+        <button type="button" onclick="clearResult()">Reset</button>
     </form>
 
     <div id="result">
         <!-- Result will be displayed here -->
-        The total cost for <span id="area">0</span> sqm is: ₹<span id="cost">0.00</span>
+        The total cost for <span id="area">0.00</span> sqm is: ₹<span id="cost">0.00</span>
     </div>
 
     <script>
         function calculatePricing(area_sqm) {
-            let base_price, slab_rate;
+            let base_price, slab_rate, additional_area;
+
             if (area_sqm <= 50000) {
                 return 24995;
             } else if (area_sqm <= 100000) {
                 base_price = 24995;
                 slab_rate = 0.40;
-                return base_price + (area_sqm - 50000) * slab_rate;
+                additional_area = area_sqm - 50000;
+                return base_price + (additional_area * slab_rate);
             } else if (area_sqm <= 150000) {
                 base_price = 44995;
                 slab_rate = 0.35;
-                return base_price + (area_sqm - 100000) * slab_rate;
+                additional_area = area_sqm - 100000;
+                return base_price + (additional_area * slab_rate);
             } else if (area_sqm <= 200000) {
                 base_price = 62495;
                 slab_rate = 0.30;
-                return base_price + (area_sqm - 150000) * slab_rate;
+                additional_area = area_sqm - 150000;
+                return base_price + (additional_area * slab_rate);
             } else {
                 base_price = 74995;
                 slab_rate = 0.20;
-                return base_price + (area_sqm - 200000) * slab_rate;
+                additional_area = area_sqm - 200000;
+                return base_price + (additional_area * slab_rate);
             }
         }
 
         document.querySelector('form').addEventListener('submit', function(event) {
             event.preventDefault();
-            const number = parseFloat(document.querySelector('#number').value);
+            let number = parseFloat(document.querySelector('#number').value);
+            number = Math.round(number * 100) / 100; // Round to 2 decimal places
             if (number > 0) {
                 const cost = calculatePricing(number);
                 document.querySelector('#area').textContent = number.toFixed(2);
@@ -60,7 +67,8 @@
         });
 
         function clearResult() {
-            document.querySelector('#area').textContent = '0';
+            document.querySelector('#number').value = '';
+            document.querySelector('#area').textContent = '0.00';
             document.querySelector('#cost').textContent = '0.00';
         }
     </script>
